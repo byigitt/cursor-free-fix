@@ -50,6 +50,8 @@ irm https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.ps1 |
 
 ### Linux/Mac (Bash)
 
+> NOT TESTED but should work, please give me feedback.
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.sh | bash
 ```
