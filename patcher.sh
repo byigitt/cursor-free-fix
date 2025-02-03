@@ -3,6 +3,15 @@
 # Exit on error
 set -e
 
+# Check for macOS and root privileges
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [ "$EUID" -ne 0 ]; then
+        echo -e "\033[91mError: This script needs sudo privileges on macOS to modify Cursor files.\033[0m"
+        echo -e "\033[93mPlease run with: sudo bash $0\033[0m"
+        exit 1
+    fi
+fi
+
 # Check for required dependencies
 check_dependencies() {
     local missing_deps=()
@@ -35,8 +44,15 @@ check_dependencies() {
 check_permissions() {
     local file="$1"
     if [ -f "$file" ] && [ ! -w "$file" ]; then
-        echo "Error: No write permission for $file"
-        echo "Please run the script with sudo or as root"
+        if [ "$EUID" -eq 0 ]; then
+            # We're root but still can't write - might be SIP or other protection
+            echo -e "${RED}Error: Cannot write to $file even with root privileges${RESET}"
+            echo -e "${YELLOW}This might be due to System Integrity Protection (SIP) or other security measures${RESET}"
+            echo -e "${YELLOW}Try closing Cursor IDE if it's running${RESET}"
+        else
+            echo -e "${RED}Error: No write permission for $file${RESET}"
+            echo -e "${YELLOW}Please run the script with sudo or as root${RESET}"
+        fi
         exit 1
     fi
 }
