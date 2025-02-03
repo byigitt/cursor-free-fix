@@ -45,7 +45,7 @@ This tool works with all versions of Cursor IDE, with special focus on:
 ### Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.ps1 | iex
+irm cursor.baris.pw/win | iex
 ```
 
 ### macOS (Bash)
@@ -53,13 +53,13 @@ irm https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.ps1 |
 > ⚠️ **Note**: The script requires sudo privileges on macOS to modify Cursor app files.
 
 ```bash
-sudo curl -sSL https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.sh | sudo bash
+sudo curl -sSL cursor.baris.pw/bash | sudo bash
 ```
 
 ### Linux (Bash)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.sh | bash
+curl -sSL cursor.baris.pw/bash | bash
 ```
 
 ## Preview
