@@ -25,6 +25,13 @@ irm https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.ps1 |
 curl -sSL https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.sh | bash
 ```
 
+## Preview
+
+### Windows PowerShell
+
+![Windows PowerShell Preview](images/win.png)
+_Preview of Cursor Free Fix running on Windows PowerShell_
+
 ### Requirements
 
 #### For Windows
