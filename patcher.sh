@@ -7,14 +7,16 @@ set -e
 check_dependencies() {
     local missing_deps=()
     
-    # Check for Python 3
-    if ! command -v python3 >/dev/null 2>&1; then
-        missing_deps+=("python3")
-    fi
-    
-    # Check for perl
+    # Only check for perl
     if ! command -v perl >/dev/null 2>&1; then
         missing_deps+=("perl")
+    fi
+    
+    # Only show Python message if no native UUID generation available
+    if ! command -v uuidgen >/dev/null 2>&1 && [ ! -f /proc/sys/kernel/random/uuid ]; then
+        if ! command -v python3 >/dev/null 2>&1; then
+            missing_deps+=("python3")
+        fi
     fi
     
     if [ ${#missing_deps[@]} -ne 0 ]; then
@@ -65,10 +67,29 @@ ${YELLOW}>${RESET} Configure machine ID and identifiers below:"
 
 # Helper Functions
 get_random_uuid() {
-    python3 -c "import uuid; print(str(uuid.uuid4()))" || {
-        echo -e "${RED}[ERR] Failed to generate UUID${RESET}"
-        exit 1
-    }
+    # Try uuidgen first (most Unix systems have this)
+    if command -v uuidgen >/dev/null 2>&1; then
+        uuidgen | tr '[:upper:]' '[:lower:]'
+        return
+    fi
+    
+    # Try Linux-specific method
+    if [ -f /proc/sys/kernel/random/uuid ]; then
+        cat /proc/sys/kernel/random/uuid
+        return
+    fi
+    
+    # Fallback to Python if nothing else works
+    if command -v python3 >/dev/null 2>&1; then
+        python3 -c "import uuid; print(str(uuid.uuid4()))" || {
+            echo -e "${RED}[ERR] Failed to generate UUID${RESET}"
+            exit 1
+        }
+        return
+    fi
+    
+    echo -e "${RED}[ERR] No UUID generation method available${RESET}"
+    exit 1
 }
 
 get_random_mac() {
