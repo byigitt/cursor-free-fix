@@ -9,6 +9,16 @@ A tool to patch Cursor's telemetry values (machine ID, MAC address, Windows SQM 
 
 The script automatically creates backups before making any changes and provides options to use either default or custom paths for the main.js file.
 
+## Version Compatibility
+
+This tool works with all versions of Cursor IDE, with special focus on:
+
+- ✅ Works perfectly with version 0.45.x
+- 🔄 If it doesn't work on old versions, try upgrading to 0.45.x
+- 💡 Tested and confirmed working on multiple Cursor versions
+
+> 📝 **Note**: If you encounter any issues with old versions, you can download v0.45.x from the [Cursor releases page](https://cursor.com/downloads/).
+
 ## Quick Start
 
 > ⚠️ **Warning**: Always review the script's source code before executing it. Never run scripts directly from the internet without inspecting them first.
