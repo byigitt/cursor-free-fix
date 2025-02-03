@@ -48,9 +48,15 @@ This tool works with all versions of Cursor IDE, with special focus on:
 irm https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.ps1 | iex
 ```
 
-### Linux/Mac (Bash)
+### macOS (Bash)
 
-> NOT TESTED but should work, please give me feedback.
+> ⚠️ **Note**: The script requires sudo privileges on macOS to modify Cursor app files.
+
+```bash
+sudo curl -sSL https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.sh | sudo bash
+```
+
+### Linux (Bash)
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/byigitt/cursor-free-fix/main/patcher.sh | bash
@@ -89,7 +95,23 @@ _Preview of Cursor Free Fix running on Windows PowerShell_
 .\patcher.ps1
 ```
 
-#### Linux/Mac Users
+#### macOS Users
+
+1. Open Terminal
+2. Navigate to the script directory
+3. Make the script executable:
+
+```bash
+chmod +x patcher.sh
+```
+
+4. Run the script with sudo:
+
+```bash
+sudo ./patcher.sh
+```
+
+#### Linux Users
 
 1. Open Terminal
 2. Navigate to the script directory
