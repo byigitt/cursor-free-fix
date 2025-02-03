@@ -9,6 +9,25 @@ A tool to patch Cursor's telemetry values (machine ID, MAC address, Windows SQM 
 
 The script automatically creates backups before making any changes and provides options to use either default or custom paths for the main.js file.
 
+### Can be used when encountered with these messages
+
+> ⚠️ **Warning**: Make sure to delete your account and create a new one before using this script to reset your fast request limit.
+
+#### Issue 1: Trial Account Limit
+
+```text
+Too many free trial accounts used on this machine.
+Please upgrade to pro. We have this limit in place
+to prevent abuse. Please let us know if you believe
+this is a mistake.
+```
+
+#### Issue 2: Trial Request Limit
+
+```text
+You've reached your trial request limit.
+```
+
 ## Version Compatibility
 
 This tool works with all versions of Cursor IDE, with special focus on:
