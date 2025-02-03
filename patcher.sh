@@ -233,27 +233,27 @@ patch_count=0
 
 # MachineId
 apply_pattern "MachineId" \
-    "=.{0,50}timeout.{0,10}5e3.*?," \
-    "=\/*csp1\*\/\"$machine_id\"\/\*1csp\*\/," \
-    "\/\*csp1\*\/.*?\/\*1csp\*\/," && ((patch_count++))
+    '=.{0,50}timeout.{0,10}5e3.*?,' \
+    '=/*csp1*/\"'"$machine_id"'\"/*1csp*/,' \
+    '/\*csp1\*/.*?/\*1csp\*/,' && ((patch_count++))
 
 # MacAddress
 apply_pattern "MacAddress" \
-    "(function .{0,50}\{).{0,300}Unable to retrieve mac address.*?(\})" \
-    "\$1return\/*csp2\*\/\"$mac_address\"\/\*2csp\*\/;\$2" \
-    "()return\/\*csp2\*\/.*?\/\*2csp\*\/;()" && ((patch_count++))
+    '(function .{0,50}\{).{0,300}Unable to retrieve mac address.*?(\})' \
+    '\1return/*csp2*/\"'"$mac_address"'\"/*2csp*/;\2' \
+    '()return/\*csp2\*/.*?/\*2csp\*/;()' && ((patch_count++))
 
 # SqmId
 apply_pattern "SqmId" \
-    "return.{0,50}\.GetStringRegKey.*?HKEY_LOCAL_MACHINE.*?MachineId.*?\|\|.*?\"\"" \
-    "\/*csp3\*\/\"$sqm_id\"\/\*3csp\*\/" \
-    "\/\*csp3\*\/.*?\/\*3csp\*\/" && ((patch_count++))
+    'return.{0,50}\.GetStringRegKey.*?HKEY_LOCAL_MACHINE.*?MachineId.*?\|\|.*?""' \
+    '/*csp3*/\"'"$sqm_id"'\"/*3csp*/' \
+    '/\*csp3\*/.*?/\*3csp\*/' && ((patch_count++))
 
 # DeviceId
 apply_pattern "DeviceId" \
-    "return.{0,50}vscode\/deviceid.*?getDeviceId\(\)" \
-    "return\/*csp4\*\/\"$device_id\"\/\*4csp\*\/" \
-    "return\/\*csp4\*\/.*?\/\*4csp\*\/" && ((patch_count++))
+    'return.{0,50}vscode/deviceid.*?getDeviceId\(\)' \
+    'return/*csp4*/\"'"$device_id"'\"/*4csp*/' \
+    'return/\*csp4\*/.*?/\*4csp\*/' && ((patch_count++))
 
 if [[ $patch_count -eq 0 ]]; then
     echo -e "\n${RED}[ERR] No patterns were matched or replaced${RESET}"
