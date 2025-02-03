@@ -1,4 +1,4 @@
-# Cursor Shadow Patch for Windows
+# Cursor Free Fix for Windows
 # Colors for console output
 $RED = "`e[91m"
 $GREEN = "`e[92m"
