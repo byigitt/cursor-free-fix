@@ -50,7 +50,7 @@ function Get-RandomUUID {
 
 function Get-RandomMacAddress {
     $mac = (1..6 | ForEach-Object { '{0:X2}' -f (Get-Random -Minimum 0 -Maximum 255) }) -join ':'
-    while ($mac -in @('00:00:00:00:00:00', 'ff:ff:ff:ff:ff:ff', 'ac:de:48:00:11:22')) {
+    while ($mac -in @('00:00:00:00:00:00'; 'ff:ff:ff:ff:ff:ff'; 'ac:de:48:00:11:22')) {
         $mac = (1..6 | ForEach-Object { '{0:X2}' -f (Get-Random -Minimum 0 -Maximum 255) }) -join ':'
     }
     return $mac
@@ -181,17 +181,17 @@ $patterns = @{
         Pattern = '=.{0,50}timeout.{0,10}5e3.*?,'
         Replace = "=/*csp1*/`"$machineId`"/*1csp*/,"
         Probe = '/\*csp1\*/.*?/\*1csp\*/,'
-    }
+    };
     MacAddress = @{
         Pattern = '(function .{0,50}\{).{0,300}Unable to retrieve mac address.*?(\})'
         Replace = "`$1return/*csp2*/`"$macAddress`"/*2csp*/;`$2"
         Probe = '()return/\*csp2\*/.*?/\*2csp\*/;()'
-    }
+    };
     SqmId = @{
         Pattern = 'return.{0,50}\.GetStringRegKey.*?HKEY_LOCAL_MACHINE.*?MachineId.*?\|\|.*?""'
         Replace = "/*csp3*/`"$sqmId`"/*3csp*/"
         Probe = '/\*csp3\*/.*?/\*3csp\*/'
-    }
+    };
     DeviceId = @{
         Pattern = 'return.{0,50}vscode\/deviceid.*?getDeviceId\(\)'
         Replace = "return/*csp4*/`"$deviceId`"/*4csp*/"
@@ -230,7 +230,7 @@ if ($patchCount -eq 0) {
 # Save the changes
 try {
     Write-Host "`n> Saving changes to $jsPath"
-    $content | Set-Content $jsPath -NoNewline -ErrorAction Stop
+    Set-Content -Path $jsPath -Value $content -Encoding UTF8 -ErrorAction Stop
     Write-Host "${GREEN}[√] File saved successfully${RESET}"
 }
 catch {
