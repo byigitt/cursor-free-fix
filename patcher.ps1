@@ -179,23 +179,23 @@ if (-not $deviceId) {
 $patterns = @{
     MachineId = @{
         Pattern = '(?s)=[\s\S]{0,50}t\$\(y5\[mm\],\{timeout:5e3\}\)\.toString\(\)[\s\S]*?,';
-        Replace = "=/*csp1*/`"$machineId`"/*1csp*/,";
-        Probe   = '/\*csp1\*/[\s\S]*?/\*1csp\*/,';
+        Replace = "=`"/*csp1*/$machineId/*1csp*/`",";
+        Probe   = '/\*csp1\*/[\s\S]*?/\*1csp\*/';
     };
     MacAddress = @{
         Pattern = '(function[\s\S]{0,50}\{)[\s\S]{0,300}Unable to retrieve mac address[\s\S]*?(\})';
-        Replace = "`$1return/*csp2*/`"$macAddress`"/*2csp*/;`$2";
-        Probe   = 'return/\*csp2\*/[\s\S]*?/\*2csp\*/;';
+        Replace = "`$1 return `"/*csp2*/$macAddress/*2csp*/`"; `$2";
+        Probe   = '/\*csp2\*/[\s\S]*?/\*2csp\*/';
     };
     SQMId = @{
         Pattern = 'return[\s\S]{0,50}\.GetStringRegKey[\s\S]*?HKEY_LOCAL_MACHINE[\s\S]*?MachineId[\s\S]*?\|\|[\s\S]*?""';
-        Replace = "/*csp3*/`"$sqmId`"/*3csp*/";
+        Replace = "`"/*csp3*/$sqmId/*3csp*/`"";
         Probe   = '/\*csp3\*/[\s\S]*?/\*3csp\*/';
     };
     DeviceId = @{
         Pattern = 'return[\s\S]{0,50}vscode/deviceid[\s\S]*?getDeviceId\(\)';
-        Replace = "return/*csp4*/`"$deviceId`"/*4csp*/";
-        Probe   = 'return/\*csp4\*/[\s\S]*?/\*4csp\*/';
+        Replace = "return `"/*csp4*/$deviceId/*4csp*/`"";
+        Probe   = '/\*csp4\*/[\s\S]*?/\*4csp\*/';
     };
 }
 
