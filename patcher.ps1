@@ -178,25 +178,25 @@ if (-not $deviceId) {
 # Apply patches
 $patterns = @{
     MachineId = @{
-        Pattern = '=.{0,50}timeout.{0,10}5e3.*?,'
-        Replace = "=/*csp1*/`"$machineId`"/*1csp*/,"
-        Probe = '/\*csp1\*/.*?/\*1csp\*/,'
+        Pattern = '(?s)=[\s\S]{0,50}t\$\(y5\[mm\],\{timeout:5e3\}\)\.toString\(\)[\s\S]*?,';
+        Replace = "=/*csp1*/`"$machineId`"/*1csp*/,";
+        Probe   = '/\*csp1\*/[\s\S]*?/\*1csp\*/,';
     };
     MacAddress = @{
-        Pattern = '(function .{0,50}\{).{0,300}Unable to retrieve mac address.*?(\})'
-        Replace = "`$1return/*csp2*/`"$macAddress`"/*2csp*/;`$2"
-        Probe = '()return/\*csp2\*/.*?/\*2csp\*/;()'
+        Pattern = '(function[\s\S]{0,50}\{)[\s\S]{0,300}Unable to retrieve mac address[\s\S]*?(\})';
+        Replace = "`$1return/*csp2*/`"$macAddress`"/*2csp*/;`$2";
+        Probe   = 'return/\*csp2\*/[\s\S]*?/\*2csp\*/;';
     };
-    SqmId = @{
-        Pattern = 'return.{0,50}\.GetStringRegKey.*?HKEY_LOCAL_MACHINE.*?MachineId.*?\|\|.*?""'
-        Replace = "/*csp3*/`"$sqmId`"/*3csp*/"
-        Probe = '/\*csp3\*/.*?/\*3csp\*/'
+    SQMId = @{
+        Pattern = 'return[\s\S]{0,50}\.GetStringRegKey[\s\S]*?HKEY_LOCAL_MACHINE[\s\S]*?MachineId[\s\S]*?\|\|[\s\S]*?""';
+        Replace = "/*csp3*/`"$sqmId`"/*3csp*/";
+        Probe   = '/\*csp3\*/[\s\S]*?/\*3csp\*/';
     };
     DeviceId = @{
-        Pattern = 'return.{0,50}vscode\/deviceid.*?getDeviceId\(\)'
-        Replace = "return/*csp4*/`"$deviceId`"/*4csp*/"
-        Probe = 'return/\*csp4\*/.*?/\*4csp\*/'
-    }
+        Pattern = 'return[\s\S]{0,50}vscode/deviceid[\s\S]*?getDeviceId\(\)';
+        Replace = "return/*csp4*/`"$deviceId`"/*4csp*/";
+        Probe   = 'return/\*csp4\*/[\s\S]*?/\*4csp\*/';
+    };
 }
 
 $patchCount = 0
