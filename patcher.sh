@@ -211,6 +211,7 @@ apply_pattern() {
     local pattern="$2"
     local replacement="$3"
     local probe="$4"
+    local probe_replace="$5"  # New parameter for probe replacement
     
     echo -e "\n> Processing $name..."
     
@@ -219,7 +220,7 @@ apply_pattern() {
         echo -e "${GREEN}[√] Pattern replaced successfully${RESET}"
         return 0
     elif echo "$content" | perl -ne 'exit 1 if !'"/$probe/"; then
-        content=$(echo "$content" | perl -pe "s/$probe/$replacement/g")
+        content=$(echo "$content" | perl -pe "s/$probe/$probe_replace/g")
         echo -e "${BLUE}[i] Found already patched pattern, updated${RESET}"
         return 0
     else
@@ -235,25 +236,29 @@ patch_count=0
 apply_pattern "MachineId" \
     '(?s)=.{0,50}t\$\(y5\[mm\],\{timeout:5e3\}\)\.toString\(\).{0,10},' \
     '=/*csp1*/\"'"$machine_id"'\"/*1csp*/,' \
-    '(?s)=\/\*csp1\*\/".*?"\/\*1csp\*\/,' && ((patch_count++))
+    '(?s)=\/\*csp1\*\/".*?"\/\*1csp\*\/,' \
+    '=/*csp1*/\"'"$machine_id"'\"/*1csp*/,' && ((patch_count++))
 
 # MacAddress
 apply_pattern "MacAddress" \
     '(?s)(function.{0,50}\{).{0,300}Unable to retrieve mac address.*?(\})' \
     '\1return/*csp2*/\"'"$mac_address"'\"/*2csp*/;\2' \
-    '(?s)return\/\*csp2\*\/".*?"\/\*2csp\*\/;' && ((patch_count++))
+    '(?s)return\/\*csp2\*\/".*?"\/\*2csp\*\/;' \
+    'return/*csp2*/\"'"$mac_address"'\"/*2csp*/;' && ((patch_count++))
 
 # SqmId
 apply_pattern "SqmId" \
     '(?s)return.{0,50}\.GetStringRegKey.*?HKEY_LOCAL_MACHINE.*?MachineId.*?\|\|.*?""' \
     '/*csp3*/\"'"$sqm_id"'\"/*3csp*/' \
-    '(?s)\/\*csp3\*\/".*?"\/\*3csp\*\/' && ((patch_count++))
+    '(?s)\/\*csp3\*\/".*?"\/\*3csp\*\/' \
+    '/*csp3*/\"'"$sqm_id"'\"/*3csp*/' && ((patch_count++))
 
 # DeviceId
 apply_pattern "DeviceId" \
     '(?s)return.{0,50}vscode\/deviceid.*?getDeviceId\(\)' \
     'return/*csp4*/\"'"$device_id"'\"/*4csp*/' \
-    '(?s)return\/\*csp4\*\/".*?"\/\*4csp\*\/' && ((patch_count++))
+    '(?s)return\/\*csp4\*\/".*?"\/\*4csp\*\/' \
+    'return/*csp4*/\"'"$device_id"'\"/*4csp*/' && ((patch_count++))
 
 if [[ $patch_count -eq 0 ]]; then
     echo -e "\n${RED}[ERR] No patterns were matched or replaced${RESET}"
