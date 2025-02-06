@@ -214,11 +214,11 @@ apply_pattern() {
     
     echo -e "\n> Processing $name..."
     
-    if echo "$content" | grep -qP "$pattern"; then
+    if echo "$content" | perl -ne 'exit 1 if !'"/$pattern/"; then
         content=$(echo "$content" | perl -pe "s/$pattern/$replacement/g")
         echo -e "${GREEN}[√] Pattern replaced successfully${RESET}"
         return 0
-    elif echo "$content" | grep -qP "$probe"; then
+    elif echo "$content" | perl -ne 'exit 1 if !'"/$probe/"; then
         content=$(echo "$content" | perl -pe "s/$probe/$replacement/g")
         echo -e "${BLUE}[i] Found already patched pattern, updated${RESET}"
         return 0
@@ -233,27 +233,27 @@ patch_count=0
 
 # MachineId
 apply_pattern "MachineId" \
-    '=.{0,50}timeout.{0,10}5e3.*?,' \
+    '(?s)=.{0,50}t\$\(y5\[mm\],\{timeout:5e3\}\)\.toString\(\).{0,10},' \
     '=/*csp1*/\"'"$machine_id"'\"/*1csp*/,' \
-    '/\*csp1\*/.*?/\*1csp\*/,' && ((patch_count++))
+    '(?s)=\/\*csp1\*\/".*?"\/\*1csp\*\/,' && ((patch_count++))
 
 # MacAddress
 apply_pattern "MacAddress" \
-    '(function .{0,50}\{).{0,300}Unable to retrieve mac address.*?(\})' \
+    '(?s)(function.{0,50}\{).{0,300}Unable to retrieve mac address.*?(\})' \
     '\1return/*csp2*/\"'"$mac_address"'\"/*2csp*/;\2' \
-    '()return/\*csp2\*/.*?/\*2csp\*/;()' && ((patch_count++))
+    '(?s)return\/\*csp2\*\/".*?"\/\*2csp\*\/;' && ((patch_count++))
 
 # SqmId
 apply_pattern "SqmId" \
-    'return.{0,50}\.GetStringRegKey.*?HKEY_LOCAL_MACHINE.*?MachineId.*?\|\|.*?""' \
+    '(?s)return.{0,50}\.GetStringRegKey.*?HKEY_LOCAL_MACHINE.*?MachineId.*?\|\|.*?""' \
     '/*csp3*/\"'"$sqm_id"'\"/*3csp*/' \
-    '/\*csp3\*/.*?/\*3csp\*/' && ((patch_count++))
+    '(?s)\/\*csp3\*\/".*?"\/\*3csp\*\/' && ((patch_count++))
 
 # DeviceId
 apply_pattern "DeviceId" \
-    'return.{0,50}vscode/deviceid.*?getDeviceId\(\)' \
+    '(?s)return.{0,50}vscode\/deviceid.*?getDeviceId\(\)' \
     'return/*csp4*/\"'"$device_id"'\"/*4csp*/' \
-    'return/\*csp4\*/.*?/\*4csp\*/' && ((patch_count++))
+    '(?s)return\/\*csp4\*\/".*?"\/\*4csp\*\/' && ((patch_count++))
 
 if [[ $patch_count -eq 0 ]]; then
     echo -e "\n${RED}[ERR] No patterns were matched or replaced${RESET}"
