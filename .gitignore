@@ -1,2 +1,6 @@
 # cursor
 .cursorrules
+
+# replace (for test purposes)
+test/
+replace.sh
